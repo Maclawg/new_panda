@@ -1,0 +1,33 @@
+---
+- name: Install lxml requirements
+  become: true
+  apt:
+    pkg:
+      - python-dev
+      - libxml2
+      - libxml2-dev
+      - libxslt1-dev
+      - lib32z1-dev
+      - libssl-dev
+      - zlib1g-dev
+      - python3-pip
+  connection: local
+  register: apt_action
+  retries: 100
+  until: apt_action is success or ('Failed to lock apt for exclusive operation' not in apt_action.msg and '/var/lib/dpkg/lock' not in apt_action.msg)
+  
+- name: install lxml
+  command: "pip3 install lxml"
+  environment:
+    CFLAGS: "-O0"
+  connection: local
+
+- name: Download Java artifact
+  maven_artifact:
+    group_id: pl.pandait
+    artifact_id: panda
+    repository_url: "{{ repository_url }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    dest: "{{ artifact_name }}"
+  connection: local
