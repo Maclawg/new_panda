@@ -1,10 +1,10 @@
 pipeline {
     agent {
-        label 'Slave'
+        label 'slave'
     }
     tools {
         // Install the Maven version configured as "M3" and add it to the path.
-        maven "M3"
+        maven "m3"
         terraform 'Terraform'
     }
     environment {
